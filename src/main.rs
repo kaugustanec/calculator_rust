@@ -52,13 +52,11 @@ impl Expression {
 
     fn match_operation(&self) -> Result<f64, ErrorString> {
         match &self.operator {
-            Ok(operator) => match operator {
-                Operation::Addition => Ok(self.add_numbers()),
-                Operation::Division => Ok(self.divide_numbers()),
-                Operation::Multiplication => Ok(self.multiply_numbers()),
-                Operation::Subtraction => Ok(self.subtract_numbers()),
-            },
-            Err(v) => Err(ErrorString(String::from("Error"))),
+            Ok(Operation::Addition) => Ok(self.add_numbers()),
+            Ok(Operation::Division) => Ok(self.divide_numbers()),
+            Ok(Operation::Subtraction) => Ok(self.subtract_numbers()),
+            Ok(Operation::Multiplication) => Ok(self.multiply_numbers()),
+            _ => Err(ErrorString::new("ERROR: Failed to match operator")),
         }
     }
 
