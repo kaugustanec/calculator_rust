@@ -1,6 +1,7 @@
 use std::str::FromStr;
 use text_io::scan;
 
+#[derive(Debug)]
 struct ErrorString(String);
 
 impl ErrorString {
@@ -31,15 +32,15 @@ impl FromStr for Operation {
 }
 
 struct Expression {
-    first_number: u32,
-    second_number: u32,
+    first_number: f64,
+    second_number: f64,
     operator: Result<Operation, ErrorString>,
 }
 
 impl Expression {
     fn new(
-        first_number: u32,
-        second_number: u32,
+        first_number: f64,
+        second_number: f64,
         operator: Result<Operation, ErrorString>,
     ) -> Self {
         Expression {
@@ -49,38 +50,36 @@ impl Expression {
         }
     }
 
-    fn match_operation(&self) -> u32 {
+    fn match_operation(&self) -> Result<f64, ErrorString> {
         match &self.operator {
-            Ok(operator) => match operator {
-                Operation::Addition => self.add_numbers(),
-                Operation::Division => self.divide_numbers(),
-                Operation::Multiplication => self.multiply_numbers(),
-                Operation::Subtraction => self.subtract_numbers(),
-            },
-            Err(v) => 999,
+            Ok(Operation::Addition) => Ok(self.add_numbers()),
+            Ok(Operation::Division) => Ok(self.divide_numbers()),
+            Ok(Operation::Subtraction) => Ok(self.subtract_numbers()),
+            Ok(Operation::Multiplication) => Ok(self.multiply_numbers()),
+            _ => Err(ErrorString::new("ERROR: Failed to match operator")),
         }
     }
 
-    fn add_numbers(&self) -> u32 {
+    fn add_numbers(&self) -> f64 {
         self.first_number + self.second_number
     }
 
-    fn subtract_numbers(&self) -> u32 {
+    fn subtract_numbers(&self) -> f64 {
         self.first_number - self.second_number
     }
 
-    fn multiply_numbers(&self) -> u32 {
+    fn multiply_numbers(&self) -> f64 {
         self.first_number * self.second_number
     }
 
-    fn divide_numbers(&self) -> u32 {
+    fn divide_numbers(&self) -> f64 {
         self.first_number / self.second_number
     }
 }
 
 fn main() {
-    let first_number: u32;
-    let second_number: u32;
+    let first_number: f64;
+    let second_number: f64;
     let operator: String;
 
     scan!("{} {} {}", first_number, operator, second_number);
